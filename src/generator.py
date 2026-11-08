@@ -38,14 +38,17 @@ def generate(question: str, chunks: list[Chunk]) -> dict:
             client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
             msg = client.messages.create(
                 model=config.LLM_MODEL,
-                max_tokens=900,
+                max_tokens=4000,
                 system=SYSTEM_PROMPT,
                 messages=[{
                     "role": "user",
                     "content": f"النصوص النظامية:\n{build_context(chunks)}\n\nالسؤال: {question}",
                 }],
             )
-            return {"answer": msg.content[0].text, "mode": "llm"}
+            text = "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
+            if not text:
+                raise ValueError("empty answer from the model")
+            return {"answer": text, "mode": "llm"}
         except Exception as e:  # network / auth issues -> degrade gracefully
             fallback = _extractive(chunks)
             fallback["error"] = str(e)
