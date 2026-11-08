@@ -239,8 +239,10 @@ UI: `python app/gradio_app.py` (or the launch cell below) · API: `uvicorn api.m
 - The 160 questions were drafted with an AI assistant from their gold articles, not asked by real litigants. The bootstrap CIs show the remaining uncertainty.
 - Pooling bias: gold labels were found with lexical candidates and manual search. An article neither surfaces
   could still be missed as a second correct answer.
-- One law (Civil Transactions) dominates the corpus. The main expropriation law could not be retrieved from the source.
+- Civil Transactions is 49% of the corpus. This is the real size of that law (721 articles), not a collection flaw; we kept every article and handled the imbalance with class weights and macro-F1. The main expropriation law page returned a server error and is missing.
 - Generation quality (faithfulness of the LLM's answer) is not measured here; only retrieval is.
+- Compute: with no GPU, the cross-encoder reranker takes about 1 s per question–article pair on CPU (the full evaluation took ~70 minutes), so the free live demo runs bge-m3 without reranking (R@5 0.91 instead of 0.96).
+- No official API: the Bureau of Experts portal offers no public API, so the scraper parses the HTML pages directly. It depends on the page layout and must be updated if the site changes.
 
 **Future work**
 - Collect real questions from the public through a Google Form, and add Board of Grievances judgments.
