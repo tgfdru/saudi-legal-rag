@@ -39,7 +39,6 @@ def generate(question: str, chunks: list[Chunk]) -> dict:
             msg = client.messages.create(
                 model=config.LLM_MODEL,
                 max_tokens=900,
-                temperature=0,
                 system=SYSTEM_PROMPT,
                 messages=[{
                     "role": "user",
