@@ -84,6 +84,8 @@ def ask(question, retriever, k):
     cards = "".join(_card(i, rag.chunks[idx], s) for i, (idx, s) in enumerate(hits, 1))
     mode = "🤖 إجابة مولّدة مع الاستشهاد" if res["mode"] == "llm" else "📜 أقرب المواد النظامية (بدون نموذج لغوي)"
     answer = f"{res['answer']}\n\n---\n<small>{mode} · {NAMES.get(retriever, retriever)} · {res['latency_s']} ث · {res['disclaimer']}</small>"
+    if res.get("llm_error"):  # key is set but the Claude call failed: show why (never the key itself)
+        answer += f"\n\n<small>⚠️ تعذّر استخدام Claude: {str(res['llm_error'])[:200]}</small>"
     return answer, cards
 
 

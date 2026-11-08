@@ -29,6 +29,7 @@ class LegalRAG:
             "question": question,
             "answer": out["answer"],
             "mode": out["mode"],
+            "llm_error": out.get("error"),
             "retriever": retriever.name,
             "disclaimer": DISCLAIMER,
             "latency_s": round(time.time() - t0, 2),
